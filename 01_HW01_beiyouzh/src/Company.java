@@ -24,17 +24,17 @@ public class Company {
 	//constructors of the company
 	public Company(String name) {
 		this.name = name;
+		this.currentNumUsers = 0;
 	}
 	public Company(String name, int myMax) {
-		super();
 		this.name = name;
-		MAX_CAPACITY = myMax;
+		this.MAX_CAPACITY = myMax;
 	}
 	public Company(String name, User[] companyMem) {
 		this.name = name;
 		this.companyMem = companyMem;
-		MAX_CAPACITY = companyMem.length;
-		currentNumUsers = helperCountUser(companyMem);
+		this.MAX_CAPACITY = companyMem.length;
+		this.currentNumUsers = helperCountUser(companyMem);
 	}
 	//a helper function to count the number of users in a company
 	private int helperCountUser(User[] companyMem) {
@@ -46,7 +46,7 @@ public class Company {
 		return count;
 	}
 	public String usersToString() {
-		String output = null;
+		String output = "";
 		for(int i = 0; i < currentNumUsers; i++) {
 			output += companyMem[i];
 			output += "\n";

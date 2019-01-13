@@ -70,6 +70,7 @@ public class MyCompanyUI {
 			boolean wantsToChange = InputHelper.getBoolean(prompt, sc);
 			if(wantsToChange) {
 				String newPword = InputHelper.getString("Please enter new password  ", sc);
+				System.out.println("The new password: " + newPword);
 				boolean changed = user.changePassword(current, newPword);
 				if (changed) System.out.println("Password updated");
 				else System.out.println("Mismatch. Password NOT changed.");

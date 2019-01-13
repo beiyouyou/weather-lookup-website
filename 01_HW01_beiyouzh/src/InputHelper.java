@@ -45,7 +45,7 @@ public class InputHelper {
 			}
 			num = sc.nextInt();
 			if(num < rangeA || num > rangeB) {
-				System.out.println(num + " not within range " + rangeA + " and " + rangeB + prompt);
+				System.out.println(num + " not within range " + rangeA + " and " + rangeB + " " + prompt);
 				sc.nextLine();
 				continue;
 			}
@@ -58,14 +58,48 @@ public class InputHelper {
 		
 	}
 	public static User getUserObject(Scanner sc) {
+		System.out.println("Please enter user's full name: ");
 		String username = sc.next();
-		String useremail = sc.next();
+		sc.nextLine();
+		System.out.println("Please enter user's password: ");
 		String userpass = sc.next();
+		sc.nextLine();
+		System.out.println("Please enter email: ");
+		boolean valid = false;
+		String useremail = null;
+		while(!valid) {
+			useremail = sc.next();
+			for( int i = 0; i < useremail.length(); i++) {
+				if(useremail.charAt(i) =='@') {
+					valid = true;
+					break;
+				}
+			}
+			if(!valid) {
+				System.out.println("The email you entered is invalid. Please enter email: ");
+			}
+		}
+		sc.nextLine();
 		User newUser = new User(username, useremail, userpass);
 		return newUser;
 	}
 	public static boolean getBoolean(String prompt, Scanner sc) {
 		System.out.println(prompt);
-		return true;
+		String anwser = sc.next();
+		boolean ongoing = true;
+		while(ongoing) {
+			if(anwser.contentEquals("y") || anwser.contentEquals("yes") || anwser.contentEquals("Y")) {
+				sc.nextLine();
+				return true;
+			}
+			else if(anwser.contentEquals("n") || anwser.contentEquals("no") || anwser.contentEquals("N")) {
+				sc.nextLine();
+				return false;
+			}
+			System.out.println(anwser + " not recognized\n" + prompt);
+			sc.nextLine();
+			anwser = sc.next();			
+		}
+		return false;
 	}
 }
