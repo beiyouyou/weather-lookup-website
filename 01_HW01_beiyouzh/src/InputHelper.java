@@ -5,7 +5,7 @@ import java.util.Scanner;
  */
 
 /**
- * Brief description of the code
+ * help parse the input
  * 
  * @author Beiyou Zhu
  * ITP 368, Fall 2018

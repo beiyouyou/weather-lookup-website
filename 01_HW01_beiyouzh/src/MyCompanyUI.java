@@ -1,3 +1,13 @@
+
+
+
+/* It is the companyUI class that tests the functionality of your company class
+ * 
+ * @author Beiyou Zhu
+ * ITP 368, Fall 2018
+ * Assignment1
+ * beiyouzh@usc.edu
+ */
 import java.util.Scanner;
 
 public class MyCompanyUI {
@@ -80,9 +90,6 @@ public class MyCompanyUI {
 		else {
 			System.out.println("Password is not correct.");
 		}
-
-
-
 	}
 
 	// DO NOT EDIT: prints company information (for any given company)
@@ -113,5 +120,4 @@ public class MyCompanyUI {
 
 		return c;
 	}
-
 }
