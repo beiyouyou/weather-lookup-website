@@ -6,15 +6,19 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class fileReader {
-	// private weatherData[] dataArray;
-	// private int sizeOfArray = 100;
-
+	private weatherData[] dataArray;
+	private int sizeOfArray = 100;
+	private int numCity;
+	boolean legalFile;
 	public fileReader() {
-		// dataArray = new weatherData[sizeOfArray];
+		dataArray = new weatherData[sizeOfArray];
+		legalFile = false;
+		numCity = 0;
 	}
 
-	public static void readFile(String prompt, Scanner sc) {
-		System.out.println(prompt);
+	public void readFile(Scanner sc) {
+		//clean and create a new array
+		this.dataArray = new weatherData[this.sizeOfArray];
 		String file = sc.next();
 		File fr = new File(file);
 		Scanner chart = null;
@@ -37,6 +41,7 @@ public class fileReader {
 		int windDirection = 0;
 		String conditionDescription = "";
 		String next = "";
+		int index = 0;
 		if(chart!= null) {
 			while (chart.hasNextLine()) {
 				String read = chart.nextLine();
@@ -57,7 +62,7 @@ public class fileReader {
 					currentTemperature = Integer.parseInt(next);
 				} catch (NumberFormatException nfe) {
 					System.out.println("This file " + file + " is not formatted properly.\n" + "Unable to convert " + next
-							+ "to an int.");
+							+ " to an integer.");
 					return;
 				}
 				if (!tokenizer.hasMoreTokens()) {
@@ -70,7 +75,7 @@ public class fileReader {
 					dayLow = Integer.parseInt(next);
 				} catch (NumberFormatException nfe) {
 					System.out.println("This file " + file + " is not formatted properly.\n" + "Unable to convert " + next
-							+ "to an int.");
+							+ " to an integer.");
 					return;
 				}
 				if (!tokenizer.hasMoreTokens()) {
@@ -83,7 +88,7 @@ public class fileReader {
 					dayHigh = Integer.parseInt(next);
 				} catch (NumberFormatException nfe) {
 					System.out.println("This file " + file + " is not formatted properly.\n" + "Unable to convert " + next
-							+ "to an int.");
+							+ " to an integer.");
 					return;
 				}
 				if (!tokenizer.hasMoreTokens()) {
@@ -96,7 +101,7 @@ public class fileReader {
 					humidity = Integer.parseInt(next);
 				} catch (NumberFormatException nfe) {
 					System.out.println("This file " + file + " is not formatted properly.\n" + "Unable to convert " + next
-							+ "to an int.");
+							+ " to an integer.");
 					return;
 				}
 				if (!tokenizer.hasMoreTokens()) {
@@ -109,7 +114,7 @@ public class fileReader {
 					pressure = Float.parseFloat(next);
 				} catch (NumberFormatException nfe) {
 					System.out.println("This file " + file + " is not formatted properly.\n" + "Unable to convert " + next
-							+ "to a float.");
+							+ " to a float.");
 					return;
 				}
 				if (!tokenizer.hasMoreTokens()) {
@@ -122,7 +127,7 @@ public class fileReader {
 					visibility = Float.parseFloat(next);
 				} catch (NumberFormatException nfe) {
 					System.out.println("This file " + file + " is not formatted properly.\n" + "Unable to convert " + next
-							+ "to a float.");
+							+ " to a float.");
 					return;
 				}
 				if (!tokenizer.hasMoreTokens()) {
@@ -135,7 +140,7 @@ public class fileReader {
 					windspeed = Float.parseFloat(next);
 				} catch (NumberFormatException nfe) {
 					System.out.println("This file " + file + " is not formatted properly.\n" + "Unable to convert " + next
-							+ "to a float.");
+							+ " to a float.");
 					return;
 				}
 				if (!tokenizer.hasMoreTokens()) {
@@ -148,7 +153,7 @@ public class fileReader {
 					windDirection = Integer.parseInt(next);
 				} catch (NumberFormatException nfe) {
 					System.out.println("This file " + file + " is not formatted properly.\n" + "Unable to convert " + next
-							+ "to an Integer.");
+							+ " to an Integer.");
 					return;
 				}
 				if (!tokenizer.hasMoreTokens()) {
@@ -161,10 +166,37 @@ public class fileReader {
 				}
 				weatherData cityWeather = new weatherData(city, currentTemperature, dayLow, dayHigh, humidity, pressure,
 						visibility, windspeed, windDirection, conditionDescription);
-				System.out.print(cityWeather + "\n");
+				this.dataArray[index] = cityWeather;
+				index++;
 			}
 		}
+		this.legalFile = true;
+		this.numCity = index;
 		chart.close();
 		return;
+	}
+	public boolean isLegalCity(String name) {
+		for(int i = 0; i < this.numCity; i++) {
+			if(this.dataArray[i].getCity().contentEquals(name)) return true;
+		}
+		return false;
+	}
+	public weatherData findCity(String name) {
+		for(int i = 0; i < this.numCity; i++) {
+			if(this.dataArray[i].getCity().contentEquals(name)) return this.dataArray[i];
+		}
+		return null;
+	}
+	@Override
+	public String toString() {
+		String output = "";
+		for(int i = 0; i < this.numCity; i++) {
+			output += this.dataArray[i] + "\n";
+		}
+		return output;
+	}
+
+	public boolean isLegalFile() {
+		return this.legalFile;
 	}
 }

@@ -29,8 +29,6 @@ public class weatherData {
 		this.conditionDescription = conditionDescription;
 	}
 
-	
-
 	@Override
 	public String toString() {
 		return "weatherData [city=" + city + ", currentTemperature=" + currentTemperature + ", dayLow=" + dayLow
@@ -39,9 +37,48 @@ public class weatherData {
 				+ ", conditionDescription=" + conditionDescription + "]";
 	}
 
-
-
 	public String conditionDescription() {
 		return toString();
 	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public int getCurrentTemperature() {
+		return currentTemperature;
+	}
+
+	public int getDayLow() {
+		return dayLow;
+	}
+
+	public int getDayHigh() {
+		return dayHigh;
+	}
+
+	public int getHumidity() {
+		return humidity;
+	}
+
+	public float getPressure() {
+		return pressure;
+	}
+
+	public float getVisibility() {
+		return visibility;
+	}
+
+	public float getWindspeed() {
+		return windspeed;
+	}
+
+	public int getWindDirection() {
+		return windDirection;
+	}
+
+	public String getConditionDescription() {
+		return conditionDescription;
+	}
+	
 }
