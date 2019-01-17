@@ -172,6 +172,7 @@ public class fileReader {
 		}
 		this.legalFile = true;
 		this.numCity = index;
+		sc.nextLine();
 		chart.close();
 		return;
 	}
