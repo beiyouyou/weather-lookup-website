@@ -26,7 +26,7 @@ public class fileReader {
 				chart = new Scanner(fr);
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
-				System.out.println("The file " + file + " does not exist.\n");
+				System.out.println("The file " + file + " does not exist.");
 				return;
 			}
 		// see if the file is correctly formated
@@ -187,6 +187,54 @@ public class fileReader {
 			if(this.dataArray[i].getCity().contentEquals(name)) return this.dataArray[i];
 		}
 		return null;
+	}
+	public void printCurTem(){
+		for(int i = 0; i < this.numCity; i++) {
+			dataArray[i].printCurTem();
+		}
+		return;
+	}
+	public void printDayLowHigh() {
+		for(int i = 0; i < this.numCity; i++) {
+			dataArray[i].printDayLowHigh();
+		}
+		return;
+	}
+	public void printHumidity() {
+		for(int i = 0; i < this.numCity; i++) {
+			dataArray[i].printHumidity();
+		}
+		return;
+	}
+	public void printPressure() {
+		for(int i = 0; i < this.numCity; i++) {
+			dataArray[i].printPressure();
+		}
+		return;
+	}
+	public void printVisibility() {
+		for(int i = 0; i < this.numCity; i++) {
+			dataArray[i].printVisibility();
+		}
+		return;
+	}
+	public void printWind() {
+		for(int i = 0; i < this.numCity; i++) {
+			dataArray[i].printWind();
+		}
+		return;
+	}
+	public void printWeatherDescription() {
+		for(int i = 0; i < this.numCity; i++) {
+			dataArray[i].printWeatherDescription();
+		}
+		return;
+	}
+	public void printAll() {
+		for(int i = 0; i < this.numCity; i++) {
+			dataArray[i].printAll();
+		}
+		return;
 	}
 	@Override
 	public String toString() {

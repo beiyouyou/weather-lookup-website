@@ -8,15 +8,18 @@ public class inputHelper {
 		boolean ongoing = true;
 		int output = 0;
 		while(ongoing) {
-		if(!sc.hasNextInt()) {
-		System.out.println("This is not a valid option." + "\n" + prompt);
-		sc.nextLine();
-		continue;
+		String input = sc.nextLine();
+		if(input.contentEquals("EXIT")){
+			return -1;
+		}//return -1 if the user wants to quit
+		try {
+			output = Integer.parseInt(input);
+		}catch(NumberFormatException nfe) {	
+			System.out.println("This is not a valid option." + "\n" + prompt);
+			continue;
 		}
-		output = sc.nextInt();
 		if(output < 1 || output > 9) {
 		System.out.println("This is not a valid option." + "\n" + prompt);
-		sc.nextLine();
 		continue;
 		}
 		break;
