@@ -9,7 +9,7 @@ public class inputHelper {
 		int output = 0;
 		while(ongoing) {
 		String input = sc.nextLine();
-		if(input.contentEquals("EXIT")){
+		if(input.contentEquals("EXIT") || input.contentEquals("exit")){
 			return -1;
 		}//return -1 if the user wants to quit
 		try {

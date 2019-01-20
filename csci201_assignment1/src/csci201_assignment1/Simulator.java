@@ -19,10 +19,10 @@ public class Simulator {
 		
 		System.out.println("For what city would you like weather information ");
 		String answer = reader.nextLine();
-		if(answer.contentEquals("ALL")){
+		if(answer.contentEquals("ALL") || answer.contentEquals("all")){
 			choose_all = true;
 		}
-		else if(answer.contentEquals("EXIT")) {
+		else if(answer.contentEquals("EXIT") || answer.contentEquals("exit")) {
 			break;
 		}
 		else if(!Freader.isLegalCity(answer)) {
@@ -45,16 +45,17 @@ public class Simulator {
 			choice = inputHelper.readChoice("What information would you like to know? ", reader);
 			switch(choice) {
 			case -1: break;
-			case 1: data1.printCurTem();
-			case 2: data1.printDayLowHigh();;
-			case 3: data1.printHumidity();
-			case 4: data1.printPressure();
-			case 5: data1.printVisibility();
-			case 6: data1.printWind();
-			case 7: data1.printWeatherDescription();
-			case 8: data1.printAll();
+			case 1: data1.printCurTem();break;
+			case 2: data1.printDayLowHigh();break;
+			case 3: data1.printHumidity();break;
+			case 4: data1.printPressure();break;
+			case 5: data1.printVisibility();break;
+			case 6: data1.printWind();break;
+			case 7: data1.printWeatherDescription();break;
+			case 8: data1.printAll();break;
 			case 9: break;
 			}
+			if(choice == 9 || choice == -1)break;
 			}
 			if(choice == -1) break;
 		}
@@ -70,21 +71,20 @@ public class Simulator {
 					+ "8) Everything \n"
 					+ "9) Enter a different city");
 			while(ongoing) {
-			System.out.println(" the choice is " + Integer.toString(choice));
 			choice = inputHelper.readChoice("What information would you like to know? ", reader);
-			System.out.println(" the choice is " + Integer.toString(choice));
 			switch(choice) {
 			case -1: break;
-			case 1: Freader.printCurTem();
-			case 2: Freader.printDayLowHigh();;
-			case 3: Freader.printHumidity();
-			case 4: Freader.printPressure();
-			case 5: Freader.printVisibility();
-			case 6: Freader.printWind();
-			case 7: Freader.printWeatherDescription();
-			case 8: Freader.printAll();
+			case 1: Freader.printCurTem(); break;
+			case 2: Freader.printDayLowHigh();break;
+			case 3: Freader.printHumidity();break;
+			case 4: Freader.printPressure();break;
+			case 5: Freader.printVisibility();break;
+			case 6: Freader.printWind();break;
+			case 7: Freader.printWeatherDescription();break;
+			case 8: Freader.printAll();break;
 			case 9: break;
 			}
+			if(choice == 9 || choice == -1)break;
 			}
 			if(choice == -1) break;
 		}

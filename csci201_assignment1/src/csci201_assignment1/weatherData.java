@@ -38,32 +38,32 @@ public class weatherData {
 	}
 	public void printCurTem(){
 		System.out.println("The temperature in " + city + " is " + Integer.toString(currentTemperature)
-		+ " degree Fahrenheit. \n");
+		+ " degree Fahrenheit.");
 	}
 	public void printDayLowHigh() {
 		System.out.println("The high temperature in " + city + " is " + Integer.toString(dayHigh)
 		+ " degree Fahrenheit. \nThe low temperature in "+ city + " is " + Integer.toString(dayLow)
-		+ " degree Fahrenheit.\n" );
+		+ " degree Fahrenheit." );
 	}
 	public void printHumidity() {
 		System.out.println("The humidity in " + city + " is " + Integer.toString(humidity)
-		+ "%.\n");
+		+ "%.");
 	}
 	public void printPressure() {
 		System.out.println("The pressure in " + city + " is " + Float.toString(pressure)
-		+ " Inch Hg\n");
+		+ " Inch Hg.");
 	}
 	public void printVisibility() {
 		System.out.println("The visibility in " + city + " is " + Float.toString(visibility)
-		+ "%\n");
+		+ "%");
 	}
 	public void printWind() {
 		System.out.println("The wind speed in " + city + " is " + Float.toString(windspeed)
 		+ " miles/hour. \nThe wind direction in "+ city + " is " + Integer.toString(windDirection)
-		+ " degrees\n." );
+		+ " degrees." );
 	}
 	public void printWeatherDescription() {
-		System.out.println(city + " weather can be described as " + conditionDescription +".\n");
+		System.out.println(city + " weather can be described as " + conditionDescription +".");
 		return;
 	}
 	public void printAll() {

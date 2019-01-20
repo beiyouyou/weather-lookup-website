@@ -161,6 +161,7 @@ public class fileReader {
 							+ "There are not enough parameters on line " + read);
 					return;
 				}
+				conditionDescription = "";
 				while (tokenizer.hasMoreTokens()) {
 					conditionDescription += tokenizer.nextToken() + " ";
 				}
@@ -233,6 +234,7 @@ public class fileReader {
 	public void printAll() {
 		for(int i = 0; i < this.numCity; i++) {
 			dataArray[i].printAll();
+			System.out.println("\n");
 		}
 		return;
 	}
