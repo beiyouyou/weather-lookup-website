@@ -1,3 +1,4 @@
+package weatherReader;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -8,21 +9,18 @@ import java.util.StringTokenizer;
 
 public class WeatherReader {
 	private ArrayList<Weather> cities = new ArrayList<Weather>();
+	public boolean isLegal = false;
+	public String ErrorMessage = "";
 	
-	public void parseFile() {
-		String fileName = null;
-		boolean valid = false;
-		
-		while(!valid) {	
-			boolean everInvalid = false;
-			
+	public void parseFile(String File, String Path) {
+		//String path = getServletContext().getRealPath();
+		String fileName = File;
+		String path = Path;
+		boolean everInvalid = false;
 			try {
-				BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-				System.out.print("What is the name of the weather file? ");
-				fileName = in.readLine();
 				
 				@SuppressWarnings("resource")
-				BufferedReader br = new BufferedReader(new FileReader(fileName));
+				BufferedReader br = new BufferedReader(new FileReader(path));
 				String info = br.readLine();
 				
 				while(info != null) {
@@ -30,7 +28,6 @@ public class WeatherReader {
 						this.parseConditions(info);
 					}
 					else {
-						valid = false;
 						everInvalid = true;
 						break;
 					}
@@ -38,16 +35,15 @@ public class WeatherReader {
 				}
 				
 				if(!everInvalid) {
-					valid = true;
+					isLegal = true;
 				}
 			} 
 			catch (FileNotFoundException fnfe) {
-				System.out.println("The file " + fileName + " could not be found.\n");
+				ErrorMessage += "The file " + fileName + " could not be found.\n";
 			} 
 			catch (IOException ioe) {
-				System.out.println("The file " + fileName + " could not be found\n");
+				ErrorMessage += "The file " + fileName + " could not be found\n";
 			}
-		}
 	}
 	
 	public void parseConditions(String info) {
@@ -176,8 +172,8 @@ public class WeatherReader {
 			}
 		}
 		else {
-			System.out.println("The file " + fileName + " is not formatted properly.");
-			System.out.println("There are not enough parameters on line '" + info + "'.\n");
+			ErrorMessage += "The file " + fileName + " is not formatted properly.";
+			ErrorMessage += "There are not enough parameters on line '" + info + "'.\n";
 			return false;
 		}
 		
@@ -190,8 +186,8 @@ public class WeatherReader {
 			return true;
 		}
 		catch (Exception e) {
-			System.out.println("The file " + fileName + " is not formatted properly.");
-			System.out.println("Unable to convert '" + input + "' to an int.\n");
+			ErrorMessage += "The file " + fileName + " is not formatted properly.";
+			ErrorMessage += "Unable to convert '" + input + "' to an int.\n";
 			return false;
 		}
 	}
@@ -201,8 +197,8 @@ public class WeatherReader {
 			return true;
 		}
 		catch (Exception e) {
-			System.out.println("The file " + fileName + " is not formatted properly.");
-			System.out.println("Unable to convert '" + input + "' to a double.\n");
+			ErrorMessage +="The file " + fileName + " is not formatted properly.";
+			ErrorMessage +="Unable to convert '" + input + "' to a double.\n";
 			return false;
 		}
 	}
@@ -213,8 +209,8 @@ public class WeatherReader {
 			return true;
 		}
 		catch (Exception e) {
-			System.out.println("The file " + fileName + " is not formatted properly.");
-			System.out.println("Unable to convert '" + input + "' to a float.\n");
+			ErrorMessage += "The file " + fileName + " is not formatted properly.";
+			ErrorMessage += "Unable to convert '" + input + "' to a float.\n";
 			return false;
 		}
 	}
@@ -355,7 +351,8 @@ public class WeatherReader {
 
 	public static void main(String[] args) {
 		WeatherReader w = new WeatherReader();
-		w.parseFile();
-		w.menuOptions();
+		System.out.println(w.isLegal);
+		System.out.println(w.ErrorMessage);
+		//w.menuOptions();
 	}
 }
