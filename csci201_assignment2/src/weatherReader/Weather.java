@@ -9,6 +9,15 @@ public class Weather {
 	private double longitude;
 	private String sunriseTime;
 	private String sunsetTime;
+	private int currentTemperature;
+	private int dayLow;
+	private int dayHigh;
+	private int humidity;
+	private float pressure;
+	private float visibility;
+	private float windspeed;
+	private int windDirection;
+	private ArrayList<String> conditionDescription = new ArrayList<String>();
 	public String getState() {
 		return state;
 	}
@@ -45,15 +54,6 @@ public class Weather {
 	public void setSunsetTime(String sunsetTime) {
 		this.sunsetTime = sunsetTime;
 	}
-	private int currentTemperature;
-	private int dayLow;
-	private int dayHigh;
-	private int humidity;
-	private float pressure;
-	private float visibility;
-	private float windspeed;
-	private int windDirection;
-	private ArrayList<String> conditionDescription = new ArrayList<String>();
 	
 	public String getCity() {
 		return city;

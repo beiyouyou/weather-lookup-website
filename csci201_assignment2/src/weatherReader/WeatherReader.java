@@ -355,4 +355,24 @@ public class WeatherReader {
 		System.out.println(w.ErrorMessage);
 		//w.menuOptions();
 	}
+
+	public ArrayList<Weather> getCities() {
+		return cities;
+	}
+	public Weather findCity(String city) {
+		for(int i = 0; i <cities.size(); i++) {
+			if(cities.get(i).getCity().contentEquals(city)) {
+				return cities.get(i);
+			}
+		}
+		return null;
+	}
+	public Weather findCity(double latitude, double longitude) {
+			for(int i = 0; i <cities.size(); i++) {
+				if(cities.get(i).getLatitude()==latitude && cities.get(i).getLongitude()==longitude) {
+					return cities.get(i);
+				}
+			}
+			return null;
+	}
 }

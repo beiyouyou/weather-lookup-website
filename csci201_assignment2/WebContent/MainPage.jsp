@@ -23,8 +23,8 @@
 	<%WeatherReader w = new WeatherReader();
 	String path = getServletContext().getRealPath("/weather.txt");
 	w.parseFile("weather.txt", path);%>
-	<style>
 	<%if(w.isLegal){%>
+	<style>	
 	img.background{
 	width: 100%;
   	height: 100%;
@@ -34,14 +34,6 @@
   	z-index: -1;
   	filter: blur(5px);
 	}
-	/*
-	body{
-	background-image: url("image/background.jpg");
-  	background-repeat: no-repeat;
-  	backgournd-position: center;
-  	background-size:cover;
-  	}
-  	*/
   	.header{
   	position:relative;
   	top:-20px;
@@ -142,7 +134,7 @@
 	</div>
 	
 	<div id= "SearchBox">
-		<form action = "result.jsp" method = post>
+		<form action = "Backend" method = get>
 		<input type="text" name="cityname" value="Los Angeles">
 		<input type="image" src="image/magnifying_glass.jpg" alt="Submit" />
 		</form>
@@ -161,7 +153,7 @@
 	</div>
 	<div class="display">
 		<form action = "Backend" method = post>
-			<input type="submit" name="button" value="Display All">
+			<input type="submit" name="Display" value="Display All">
 		</form>
 	</div>
 	
