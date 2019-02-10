@@ -26,6 +26,8 @@ public class Backend extends HttpServlet {
 		String longitude = request.getParameter("Longitude");
 		String Display = request.getParameter("Display");
 		String choice = "";
+		String detailCity= request.getParameter("detailCity");
+		String page = "/result.jsp";
 		if(city != null) {
 			choice += "city";
 		}
@@ -35,9 +37,12 @@ public class Backend extends HttpServlet {
 		else if(Display != null) {
 			choice += "displayAll";
 		}
+		if(detailCity!= null) {
+			page = "/details.jsp";
+		}
 		System.out.println(choice);
 		request.setAttribute("choice", choice);
-		RequestDispatcher dispatch = getServletContext().getRequestDispatcher("/result.jsp");
+		RequestDispatcher dispatch = getServletContext().getRequestDispatcher(page);
 		dispatch.forward(request, response);
 		
 		

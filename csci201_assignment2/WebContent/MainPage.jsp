@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="weatherReader.Weather, weatherReader.WeatherReader" %>
+<%@ page import="weatherReader.*" %>
 <!DOCTYPE html>
 <html>
 <head>

@@ -1,5 +1,6 @@
 package weatherReader;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Weather {
 	private String city;
@@ -113,3 +114,4 @@ public class Weather {
 		return conditionDescription;
 	}
 }
+
