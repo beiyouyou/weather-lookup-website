@@ -25,6 +25,10 @@
 	w.parseFile("weather.txt", path);%>
 	<%if(w.isLegal){%>
 	<style>	
+	@font-face {
+   	font-family: regular;
+   	src: url(AvenirNext-UltraLight.tff);
+	}
 	img.background{
 	width: 100%;
   	height: 100%;
@@ -32,7 +36,7 @@
   	left: 0px;
   	top: 0px;
   	z-index: -1;
-  	filter: blur(5px);
+  	filter: brightness(60%) blur(5px);
 	}
   	.header{
   	position:relative;
@@ -93,6 +97,7 @@
   	}
   	.radioClass{
   	text-align:center;
+  	font-family: regular;
   	}
   	.display{
   	position:relative;
@@ -135,14 +140,14 @@
 	
 	<div id= "SearchBox">
 		<form action = "Backend" method = get>
-		<input type="text" name="cityname" value="Los Angeles">
+		<input type="text" name="cityname" value="Los Angeles" onfocus="this.value=''">
 		<input type="image" src="image/magnifying_glass.jpg" alt="Submit" />
 		</form>
 	</div>
 	<div id= "Location" style="visibility:hidden">
 		<form action = "Backend" method = post>
-			<input type="text" name="Latitude" value="Latitude">
-			<input type="text" name="Longitude" value="Longitude">
+			<input type="text" name="Latitude" value="Latitude" onfocus="this.value=''">
+			<input type="text" name="Longitude" value="Longitude" onfocus="this.value=''">
 			<input type="image" src="image/magnifying_glass.jpg" alt="Submit" />
 		</form>
 	</div>
@@ -156,9 +161,6 @@
 			<input type="submit" name="Display" value="Display All">
 		</form>
 	</div>
-	
-
-
 
 
 <% }%>

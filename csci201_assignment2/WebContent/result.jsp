@@ -24,6 +24,10 @@
 	w.parseFile("weather.txt", path);
 	List<Weather> cities = w.getCities();
 	Collections.sort(cities, new SortbyA_Z());
+	if(result.equals("location")){
+		
+		
+	}
 	%>
 	<style type="text/css">
 	img.background{
@@ -33,7 +37,7 @@
   	left: 0px;
   	top: 0px;
   	z-index: -1;
-  	filter: blur(5px);
+  	filter: brightness(60%) blur(5px);
 	}
   	.header{
   	position:relative;
@@ -97,6 +101,7 @@
   	position:relative;
   	left:5%;
   	color:white;
+  	font-family: Light;
   	font-size: 32px;
   	
   	}
@@ -118,8 +123,8 @@
   	}
   	#TableBox{
   	overflow-y:auto;
-  	height:50%;
-  	max-height:500px;
+  	height:60%;
+  	max-height:60%;
   	}
   	table{
   	border-spacing: 0;
@@ -151,17 +156,17 @@
   <body>
 	<img class="background" src="image/background.jpg" >
 	<div class="header">
-		<a href="MainPage.jsp" >WeatherMeister</a>
+		<a href="index.jsp" >WeatherMeister</a>
 		<div id= "SearchBox">
 			<form action = "Backend" method = get>
-				<input type="text" name="cityname" value="Los Angeles">
+				<input type="text" name="cityname" value="Los Angeles" onfocus="this.value=''">
 				<input type="image" src="image/magnifying_glass.jpg" alt="Submit" />
 			</form>
 		</div>
 		<div id= "Location" style="visibility:hidden">
 			<form action = "Backend" method = post>
-				<input type="text" name="Latitude" value="Latitude">
-				<input type="text" name="Longitude" value="Longitude">
+				<input type="text" name="Latitude" value="Latitude" onfocus="this.value=''">
+				<input type="text" name="Longitude" value="Longitude" onfocus="this.value=''">
 				<input type="image" src="image/magnifying_glass.jpg" alt="Submit" />
 			</form>
 		</div>
@@ -170,12 +175,7 @@
 		<input type="radio" onchange="hideCity(this)" name="choice"> <b style="color:white;">Location(Lat./Long.)</b>
 		</span>
 	</div>
-	<div id="title" style="visibility:hidden"><h1>All Cities</h1></div>
-	<%if(result.equals("displayAll")){ %>
-	<script>
-	 document.getElementById("title").style.visibility = "visible";
-	 </script>
-	<%} %>
+	<div id="title" style="visibility:hidden"><h1 id="title2">All Cities</h1></div>
 	<div id="TableBox">
 	<table id="Table" style="width:60%">
   		<tr>
@@ -220,7 +220,7 @@
   		</tr>
 	</table>
 	</div>
-	<div id="selectBox">
+	<div id="selectBox" style="visibility:hidden">
 	<h2>Sort by:</h2>
 	<select id="sorting" onchange="sortFunction()" >
   		<option value="0">City Name A-Z</option>
@@ -232,6 +232,10 @@
 	</select>
 	</div>
 	<script>
+	<%if(result.equals("displayAll")){ %>
+	 document.getElementById("title").style.visibility = "visible";
+	 document.getElementById("selectBox").style.visibility = "visible";
+	<%} %>
 	<% if(result.equals("displayAll")){
 	%>
 	var index = 0;
@@ -289,11 +293,28 @@
 	x[1].innerHTML = "<%=city1.getDayLow()%>";
 	x[2].innerHTML = "<%=city1.getDayHigh()%>";
 	<%}
+	else if(city1 == null){%>
+		document.getElementById("title2").innerHTML="No city matches the search";
+		document.getElementById("title2").style.visibility="visible";
+		document.getElementById("Table").style.visibility="hidden";
+	<%}
 	}
 	else if(result.equals("location")){
+	Weather city2 = null;
+	try{
 	double latitude = Double.parseDouble(request.getParameter("Latitude"));
 	double longitude = Double.parseDouble(request.getParameter("Longitude"));
-	Weather city2 = w.findCity(latitude, longitude);%>
+	city2 = w.findCity(latitude, longitude);
+	}
+	catch(Exception e){
+		city2 = null;
+	}
+	if(city2 == null){%>
+		document.getElementById("title2").innerHTML="No city matches the search";
+		document.getElementById("title2").style.visibility="visible";
+		document.getElementById("Table").style.visibility="hidden";
+	<%}
+	else{%>
 	var x = document.getElementById("Table").rows[1].cells;
 	var form = document.createElement("FORM");
 	form.setAttribute("id", "0");
@@ -307,6 +328,7 @@
 	x[1].innerHTML = "<%=city2.getDayLow()%>";
 	x[2].innerHTML = "<%=city2.getDayHigh()%>";
 	<%}
+	}
 	%>
 	function sortFunction(){
 		var x = document.getElementById("sorting").value;
@@ -315,7 +337,7 @@
 			<%Collections.sort(cities, new SortbyA_Z());
 			for(int i = 0; i <cities.size(); i++){%>
 				var x = document.getElementById("Table").rows[index +1].cells;
-				document.getElementsById("0").elements[0].setAttribute("value", "<%=cities.get(i).getCity()%>");
+				document.getElementById(index).elements[0].value = "<%=cities.get(i).getCity()%>";
 				x[1].innerHTML = "<%=cities.get(i).getDayLow()%>";
 				x[2].innerHTML = "<%=cities.get(i).getDayHigh()%>";
 				index++;
@@ -326,7 +348,7 @@
 			<%Collections.sort(cities, new SortbyZ_A());
 			for(int i = 0; i <cities.size(); i++){%>
 			var x = document.getElementById("Table").rows[index +1].cells;
-			document.getElementById(index).detailCity.setAttribute("value", <%=cities.get(i).getCity()%>);
+			document.getElementById(index).elements[0].value = "<%=cities.get(i).getCity()%>";
 			x[1].innerHTML = "<%=cities.get(i).getDayLow()%>";
 			x[2].innerHTML = "<%=cities.get(i).getDayHigh()%>";
 			index++;
@@ -337,34 +359,18 @@
 			<%Collections.sort(cities, new TempLowASC());
 			for(int i = 0; i <cities.size(); i++){%>
 			var x = document.getElementById("Table").rows[index +1].cells;
-			var form = document.createElement("FORM");
-			form.setAttribute("id", index);
-			x[0].appendChild(form);
-
-			var y = document.createElement("INPUT");
-			 y.setAttribute("type", "submit");
-			 y.setAttribute("name", "detailCity");
-			 y.setAttribute("value", "<%=cities.get(i).getCity()%>");
-			document.getElementById(index).appendChild(y);
+			document.getElementById(index).elements[0].value = "<%=cities.get(i).getCity()%>";
 			x[1].innerHTML = "<%=cities.get(i).getDayLow()%>";
 			x[2].innerHTML = "<%=cities.get(i).getDayHigh()%>";
 			index++;
-		<%}%>
+			<%}%>
 		}
 		else if(x == "3"){
 			var index = 0;
 			<%Collections.sort(cities, new TempLowDESC());
 			for(int i = 0; i <cities.size(); i++){%>
 			var x = document.getElementById("Table").rows[index +1].cells;
-			var form = document.createElement("FORM");
-			form.setAttribute("id", index);
-			x[0].appendChild(form);
-
-			var y = document.createElement("INPUT");
-			 y.setAttribute("type", "submit");
-			 y.setAttribute("name", "detailCity");
-			 y.setAttribute("value", "<%=cities.get(i).getCity()%>");
-			document.getElementById(index).appendChild(y);
+			document.getElementById(index).elements[0].value = "<%=cities.get(i).getCity()%>";
 			x[1].innerHTML = "<%=cities.get(i).getDayLow()%>";
 			x[2].innerHTML = "<%=cities.get(i).getDayHigh()%>";
 			index++;
@@ -375,15 +381,7 @@
 			<%Collections.sort(cities, new TempHighASC());
 			for(int i = 0; i <cities.size(); i++){%>
 			var x = document.getElementById("Table").rows[index +1].cells;
-			var form = document.createElement("FORM");
-			form.setAttribute("id", index);
-			x[0].appendChild(form);
-
-			var y = document.createElement("INPUT");
-			 y.setAttribute("type", "submit");
-			 y.setAttribute("name", "detailCity");
-			 y.setAttribute("value", "<%=cities.get(i).getCity()%>");
-			document.getElementById(index).appendChild(y);
+			document.getElementById(index).elements[0].value = "<%=cities.get(i).getCity()%>";
 			x[1].innerHTML = "<%=cities.get(i).getDayLow()%>";
 			x[2].innerHTML = "<%=cities.get(i).getDayHigh()%>";
 			index++;
@@ -394,19 +392,11 @@
 			<%Collections.sort(cities, new TempHighDESC());
 			for(int i = 0; i <cities.size(); i++){%>
 			var x = document.getElementById("Table").rows[index +1].cells;
-			var form = document.createElement("FORM");
-			form.setAttribute("id", index);
-			x[0].appendChild(form);
-
-			var y = document.createElement("INPUT");
-			 y.setAttribute("type", "submit");
-			 y.setAttribute("name", "detailCity");
-			 y.setAttribute("value", "<%=cities.get(i).getCity()%>");
-			document.getElementById(index).appendChild(y);
+			document.getElementById(index).elements[0].value = "<%=cities.get(i).getCity()%>";
 			x[1].innerHTML = "<%=cities.get(i).getDayLow()%>";
 			x[2].innerHTML = "<%=cities.get(i).getDayHigh()%>";
 			index++;
-		<%}%>
+			<%}%>
 		}
 	}
 	</script>
