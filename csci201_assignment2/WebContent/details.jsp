@@ -1,11 +1,26 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
- <%@ page import="weatherReader.*,java.util.List, java.util.Collections" %>
+ <%@ page import="WeatherReader.*,java.util.List, java.util.Collections" %>
 <!DOCTYPE html>
 <html>
     <head>
 	<meta charset="UTF-8">
 	<title>City Detail</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script>
+	$(document).ready(function(){
+ 	 $("#map").click(function(){
+ 		$("#googleMap").css("visibility","visible");
+    	
+   	 });
+  	});
+	$(document).ready(function(){
+	 	 $("#titlelogo").click(function(){
+	 		window.location.href = "index.jsp";
+	    	
+	   	 });
+	  	});
+	</script>
 	<script type="text/javascript">
 	function hideLoc(x){
 		if (x.checked) {
@@ -20,12 +35,9 @@
 		  }
 	}
 	</script>
-	<%String cityDetail = (String)request.getParameter("detailCity");
-	WeatherReader w = new WeatherReader();
-	String path = getServletContext().getRealPath("/weather.txt");
-	w.parseFile("weather.txt", path);
-	Weather city = w.findCity(cityDetail);
-	String Location = city.getState() +",\n" + city.getCountry();
+	<%
+	Weather city =  (Weather)request.getSession().getAttribute("city");
+	String Location = city.getCity() +",\n" + city.getCountry();
 	String TempLow = city.getDayLow() + " degrees Fahrenheit";
 	String TempHigh = city.getDayHigh() + " degrees Fahrenheit";
 	String Wind = String.format("%.2f", city.getWindspeed()) + " miles/hour";
@@ -131,6 +143,14 @@
   	height:80%;
   	text-align:center;
   	}
+  	  	#map{
+  	position:relative;
+  	top:9px;
+  	border-radius: 10%;
+  	margin-left: 10px;
+  	width:auto;
+  	height: 32px;
+  	}
   	#row1 img{
   	width:130px;
   	height:auto;
@@ -164,12 +184,20 @@
   	postion:relative;
   	top:-20px;
   	}
+  	#googleMap{
+  	visibility:hidden;
+  	position:absolute;
+  	left:20%;
+  	width:60%;
+  	height:400px;
+  	margin-top: -630px;
+  	}
   	</style>
    </head>
 	<body>
 	<img class="background" src="image/background.jpg" >
 	<div class="header">
-		<a href="index.jsp" >WeatherMeister</a>
+		<a id="titlelogo" >WeatherMeister</a>
 		<div id= "SearchBox">
 			<form action = "Backend" method = get>
 				<input type="text" name="cityname" value="Los Angeles" onfocus="this.value=''">
@@ -178,9 +206,10 @@
 		</div>
 		<div id= "Location" style="visibility:hidden">
 			<form action = "Backend" method = post>
-				<input type="text" name="Latitude" value="Latitude" onfocus="this.value=''">
-				<input type="text" name="Longitude" value="Longitude" onfocus="this.value=''">
+				<input id="lat" type="text" name="Latitude" value="Latitude" onfocus="this.value=''">
+				<input id="long" type="text" name="Longitude" value="Longitude" onfocus="this.value=''">
 				<input type="image" src="image/magnifying_glass.jpg" alt="Submit" />
+				<img id="map" src="image/MapIcon.png" alt="map" />
 			</form>
 		</div>
 		<span class="radioClass">
@@ -188,7 +217,7 @@
 		<input type="radio" onchange="hideCity(this)" name="choice"> <b style="color:white;">Location(Lat./Long.)</b>
 		</span>
 	</div>
-	<div id="title"><h1><%=cityDetail %></h1></div>
+	<div id="title"><h1><%=city.getCity() %></h1></div>
 		<table id="Table" style="width:60%">
   		<tr id="row1">
     		<th><img id="imgLoc" src="image/planet-earth.png" alt="earth" onclick="detail1(this)"></img>
@@ -219,6 +248,41 @@
    		 	 <br><p>Sunrise/set</p></th>
  		</tr>
 	</table>
+	<div id="googleMap"></div>
+	<script>
+	function myMap() {
+	var mapProp= {
+	  center:new google.maps.LatLng(51.508742,-0.120850),
+	  zoom:5,
+	};
+	var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+	google.maps.event.addListener(map, 'mouseout', function(event) {
+		  placeMarker(map, event.latLng);
+		});
+	google.maps.event.addListener(map, 'click', function(event) {
+		  click(map, event.latLng);
+		});
+	}
+	function placeMarker(map, location) {
+		  var marker = new google.maps.Marker({
+		    position: location,
+		    map: map
+		  });
+		  var infowindow = new google.maps.InfoWindow({
+		    content: 'Latitude: ' + location.lat() +
+		    '<br>Longitude: ' + location.lng()
+		  });
+		  infowindow.open(map,marker);
+	}
+	function click(map, location) {
+		  $("#googleMap").css("visibility", "hidden");
+		  var lat = parseFloat((location.lat()).toFixed(2));
+		  var lon = parseFloat((location.lng()).toFixed(2));
+		  $("#lat").val(lat);
+		  $("#long").val(lon);
+	}
+	</script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2hZA1-QqUEJC-l0giDSWPS9cY3ki2yCg&callback=myMap"></script>
 	</body>
 	<script>
 	function detail1(x){

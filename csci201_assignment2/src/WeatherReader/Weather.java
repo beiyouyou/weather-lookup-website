@@ -1,8 +1,15 @@
-package weatherReader;
+package WeatherReader;
 import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Weather {
+	@Override
+	public String toString() {
+		return "Weather [city=" + city + ", country=" + country + ", latitude=" + latitude + ", longitude=" + longitude
+				+ ", sunriseTime=" + sunriseTime + ", sunsetTime=" + sunsetTime + ", currentTemperature="
+				+ currentTemperature + ", dayLow=" + dayLow + ", dayHigh=" + dayHigh + ", humidity=" + humidity
+				+ ", windspeed=" + windspeed + ", windDirection=" + windDirection + "]";
+	}
 	private String city;
 	private String state;
 	private String country;
@@ -15,6 +22,23 @@ public class Weather {
 	private int dayHigh;
 	private int humidity;
 	private float pressure;
+	public Weather(String city, String country, double latitude, double longitude, String sunriseTime,
+			String sunsetTime, int currentTemperature, int dayLow, int dayHigh, int humidity,
+			float windspeed, int windDirection) {
+		super();
+		this.city = city;
+		this.country = country;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.sunriseTime = sunriseTime;
+		this.sunsetTime = sunsetTime;
+		this.currentTemperature = currentTemperature;
+		this.dayLow = dayLow;
+		this.dayHigh = dayHigh;
+		this.humidity = humidity;
+		this.windspeed = windspeed;
+		this.windDirection = windDirection;
+	}
 	private float visibility;
 	private float windspeed;
 	private int windDirection;

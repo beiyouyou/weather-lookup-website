@@ -1,4 +1,4 @@
-package weatherReader;
+package WeatherReader;
 
 import java.util.Comparator;
 

@@ -1,10 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page language="java" session="true" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="weatherReader.*,java.util.List, java.util.Collections" %>
+<%@ page import="WeatherReader.*,java.util.List, java.util.Collections, java.util.ArrayList" %>
 <!DOCTYPE html>
 <html>
 <head>
-	<script type="text/javascript">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<%HttpSession ses = request.getSession();
+	String account = (String)ses.getAttribute("Account");
+	System.out.println("result page session:" + account);
+	%>
+	<script>
 	function hideLoc(x){
 		if (x.checked) {
 		     document.getElementById("Location").style.visibility = "hidden";
@@ -17,17 +22,16 @@
 		     document.getElementById("Location").style.visibility = "visible";
 		  }
 	}
+	$(document).ready(function(){
+	 	 $("#titlelogo").click(function(){
+	 		window.location.href = "index.jsp";
+	    	
+	   	 });
+	  	});
 	</script>
 	<%String result = (String)request.getAttribute("choice"); 
-	WeatherReader w = new WeatherReader();
-	String path = getServletContext().getRealPath("/weather.txt");
-	w.parseFile("weather.txt", path);
-	List<Weather> cities = w.getCities();
-	Collections.sort(cities, new SortbyA_Z());
-	if(result.equals("location")){
-		
-		
-	}
+	List<Weather> cities = new ArrayList<>();
+	//Collections.sort(cities, new SortbyA_Z());
 	%>
 	<style type="text/css">
 	img.background{
@@ -75,6 +79,14 @@
   	font-size:16px;
   	width:30%;
   	height: 30px;
+  	}
+  	 #map{
+  	position:relative;
+  	top:9px;
+  	border-radius: 10%;
+  	margin-left: 10px;
+  	width:auto;
+  	height: 32px;
   	}
   	#Location input[type="text"]{
   	background: rgba(255,255,255,0.5);;
@@ -148,6 +160,14 @@
   	background-color: inherit;
 	font-size:25px;
 	}
+	#googleMap{
+  	visibility:hidden;
+  	position:absolute;
+  	left:20%;
+  	width:60%;
+  	height:400px;
+  	margin-top: -800px;
+  	}
   	</style>
 	
 <meta charset="UTF-8">
@@ -156,7 +176,7 @@
   <body>
 	<img class="background" src="image/background.jpg" >
 	<div class="header">
-		<a href="index.jsp" >WeatherMeister</a>
+		<a id="titlelogo" >WeatherMeister</a>
 		<div id= "SearchBox">
 			<form action = "Backend" method = get>
 				<input type="text" name="cityname" value="Los Angeles" onfocus="this.value=''">
@@ -165,9 +185,10 @@
 		</div>
 		<div id= "Location" style="visibility:hidden">
 			<form action = "Backend" method = post>
-				<input type="text" name="Latitude" value="Latitude" onfocus="this.value=''">
-				<input type="text" name="Longitude" value="Longitude" onfocus="this.value=''">
+				<input id= "lat" type="text" name="Latitude" value="Latitude" onfocus="this.value=''">
+				<input id = "long" type="text" name="Longitude" value="Longitude" onfocus="this.value=''">
 				<input type="image" src="image/magnifying_glass.jpg" alt="Submit" />
+				<img id="map" src="image/MapIcon.png" alt="map" />
 			</form>
 		</div>
 		<span class="radioClass">
@@ -231,55 +252,55 @@
   		<option value="5">Temp.high DESC</option>
 	</select>
 	</div>
+	<div id="googleMap"></div>
 	<script>
-	<%if(result.equals("displayAll")){ %>
-	 document.getElementById("title").style.visibility = "visible";
-	 document.getElementById("selectBox").style.visibility = "visible";
-	<%} %>
-	<% if(result.equals("displayAll")){
-	%>
-	var index = 0;
-	<%for(int i = 0; i <cities.size(); i++){
-		if (i>=7){%>
-		var table = document.getElementById("Table");
-		var row = table.insertRow(index+1);
-		var cell1 = row.insertCell(0);
-		var cell2 = row.insertCell(1);
-		var cell3 = row.insertCell(2);
-			var form = document.createElement("FORM");
-			form.setAttribute("id", index);
-			cell1.appendChild(form);
-
-			var y = document.createElement("INPUT");
-			 y.setAttribute("type", "submit");
-			 y.setAttribute("name", "detailCity");
-			 y.setAttribute("value", "<%=cities.get(i).getCity()%>");
-			document.getElementById(index).appendChild(y);
-		 cell2.innerHTML = "<%=cities.get(i).getDayLow()%>";
-		 cell3.innerHTML = "<%=cities.get(i).getDayHigh()%>";
-		 index++;
-		<%}
-		else{%>
-		var x = document.getElementById("Table").rows[index +1].cells;
-		var form = document.createElement("FORM");
-		form.setAttribute("id", index);
-		x[0].appendChild(form);
-
-		var y = document.createElement("INPUT");
-		 y.setAttribute("type", "submit");
-		 y.setAttribute("name", "detailCity");
-		 y.setAttribute("value", "<%=cities.get(i).getCity()%>");
-		document.getElementById(index).appendChild(y);
-		x[1].innerHTML = "<%=cities.get(i).getDayLow()%>";
-		x[2].innerHTML = "<%=cities.get(i).getDayHigh()%>";
-		index++;
-		<%}%>
-	<%}
+	$(document).ready(function(){
+ 	 $("#map").click(function(){
+ 		$("#googleMap").css("visibility","visible");
+    	
+   	 });
+  	});
+	</script>
+	<script>
+	function myMap() {
+	var mapProp= {
+	  center:new google.maps.LatLng(51.508742,-0.120850),
+	  zoom:5,
+	};
+	var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+	google.maps.event.addListener(map, 'mouseout', function(event) {
+		  placeMarker(map, event.latLng);
+		});
+	google.maps.event.addListener(map, 'click', function(event) {
+		  click(map, event.latLng);
+		});
 	}
-	else if(result.equals("city")){
-	Weather city1 = w.findCity((String)request.getParameter("cityname"));
-	if(city1!= null){%>
-
+	function placeMarker(map, location) {
+		  var marker = new google.maps.Marker({
+		    position: location,
+		    map: map
+		  });
+		  var infowindow = new google.maps.InfoWindow({
+		    content: 'Latitude: ' + location.lat() +
+		    '<br>Longitude: ' + location.lng()
+		  });
+		  infowindow.open(map,marker);
+	}
+	function click(map, location) {
+		  $("#googleMap").css("visibility", "hidden");
+		  var lat = parseFloat((location.lat()).toFixed(2));
+		  var lon = parseFloat((location.lng()).toFixed(2));
+		  $("#lat").val(lat);
+		  $("#long").val(lon);
+	}
+	</script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2hZA1-QqUEJC-l0giDSWPS9cY3ki2yCg&callback=myMap"></script>
+	
+	<script>
+	<%
+	Weather city = (Weather)request.getSession().getAttribute("city");
+	System.out.println("table: " + city);
+	if(city!= null){%>
 	var x = document.getElementById("Table").rows[1].cells;
 	var form = document.createElement("FORM");
 	form.setAttribute("id", "0");
@@ -288,117 +309,16 @@
 	var y = document.createElement("INPUT");
 	 y.setAttribute("type", "submit");
 	 y.setAttribute("name", "detailCity");
-	 y.setAttribute("value", "<%=city1.getCity()%>");
+	 y.setAttribute("value", "<%=city.getCity()%>");
 	document.getElementById("0").appendChild(y);
-	x[1].innerHTML = "<%=city1.getDayLow()%>";
-	x[2].innerHTML = "<%=city1.getDayHigh()%>";
+	x[1].innerHTML = "<%=city.getDayLow()%>";
+	x[2].innerHTML = "<%=city.getDayHigh()%>";
 	<%}
-	else if(city1 == null){%>
+	else if(city == null){%>
 		document.getElementById("title2").innerHTML="No city matches the search";
 		document.getElementById("title2").style.visibility="visible";
 		document.getElementById("Table").style.visibility="hidden";
-	<%}
-	}
-	else if(result.equals("location")){
-	Weather city2 = null;
-	try{
-	double latitude = Double.parseDouble(request.getParameter("Latitude"));
-	double longitude = Double.parseDouble(request.getParameter("Longitude"));
-	city2 = w.findCity(latitude, longitude);
-	}
-	catch(Exception e){
-		city2 = null;
-	}
-	if(city2 == null){%>
-		document.getElementById("title2").innerHTML="No city matches the search";
-		document.getElementById("title2").style.visibility="visible";
-		document.getElementById("Table").style.visibility="hidden";
-	<%}
-	else{%>
-	var x = document.getElementById("Table").rows[1].cells;
-	var form = document.createElement("FORM");
-	form.setAttribute("id", "0");
-	x[0].appendChild(form);
-
-	var y = document.createElement("INPUT");
-	 y.setAttribute("type", "submit");
-	 y.setAttribute("name", "detailCity");
-	 y.setAttribute("value", "<%=city2.getCity()%>");
-	document.getElementById("0").appendChild(y);
-	x[1].innerHTML = "<%=city2.getDayLow()%>";
-	x[2].innerHTML = "<%=city2.getDayHigh()%>";
-	<%}
-	}
-	%>
-	function sortFunction(){
-		var x = document.getElementById("sorting").value;
-		if(x == "0"){
-			var index = 0;
-			<%Collections.sort(cities, new SortbyA_Z());
-			for(int i = 0; i <cities.size(); i++){%>
-				var x = document.getElementById("Table").rows[index +1].cells;
-				document.getElementById(index).elements[0].value = "<%=cities.get(i).getCity()%>";
-				x[1].innerHTML = "<%=cities.get(i).getDayLow()%>";
-				x[2].innerHTML = "<%=cities.get(i).getDayHigh()%>";
-				index++;
-			<%}%>
-		}
-		else if(x == "1"){
-			var index = 0;
-			<%Collections.sort(cities, new SortbyZ_A());
-			for(int i = 0; i <cities.size(); i++){%>
-			var x = document.getElementById("Table").rows[index +1].cells;
-			document.getElementById(index).elements[0].value = "<%=cities.get(i).getCity()%>";
-			x[1].innerHTML = "<%=cities.get(i).getDayLow()%>";
-			x[2].innerHTML = "<%=cities.get(i).getDayHigh()%>";
-			index++;
-		<%}%>
-		}
-		else if(x == "2"){
-			var index = 0;
-			<%Collections.sort(cities, new TempLowASC());
-			for(int i = 0; i <cities.size(); i++){%>
-			var x = document.getElementById("Table").rows[index +1].cells;
-			document.getElementById(index).elements[0].value = "<%=cities.get(i).getCity()%>";
-			x[1].innerHTML = "<%=cities.get(i).getDayLow()%>";
-			x[2].innerHTML = "<%=cities.get(i).getDayHigh()%>";
-			index++;
-			<%}%>
-		}
-		else if(x == "3"){
-			var index = 0;
-			<%Collections.sort(cities, new TempLowDESC());
-			for(int i = 0; i <cities.size(); i++){%>
-			var x = document.getElementById("Table").rows[index +1].cells;
-			document.getElementById(index).elements[0].value = "<%=cities.get(i).getCity()%>";
-			x[1].innerHTML = "<%=cities.get(i).getDayLow()%>";
-			x[2].innerHTML = "<%=cities.get(i).getDayHigh()%>";
-			index++;
-		<%}%>
-		}
-		else if(x == "4"){
-			var index = 0;
-			<%Collections.sort(cities, new TempHighASC());
-			for(int i = 0; i <cities.size(); i++){%>
-			var x = document.getElementById("Table").rows[index +1].cells;
-			document.getElementById(index).elements[0].value = "<%=cities.get(i).getCity()%>";
-			x[1].innerHTML = "<%=cities.get(i).getDayLow()%>";
-			x[2].innerHTML = "<%=cities.get(i).getDayHigh()%>";
-			index++;
-		<%}%>
-		}
-		else{
-			var index = 0;
-			<%Collections.sort(cities, new TempHighDESC());
-			for(int i = 0; i <cities.size(); i++){%>
-			var x = document.getElementById("Table").rows[index +1].cells;
-			document.getElementById(index).elements[0].value = "<%=cities.get(i).getCity()%>";
-			x[1].innerHTML = "<%=cities.get(i).getDayLow()%>";
-			x[2].innerHTML = "<%=cities.get(i).getDayHigh()%>";
-			index++;
-			<%}%>
-		}
-	}
+	<%}%>
 	</script>
 	
 	
